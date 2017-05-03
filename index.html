@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+	.on {
+		background: pink;
+	}
+	.zeroBoth {
+		background: gray;
+	}
+	.zerop1 {
+		background: #a4c8f4;
+	}
+	.zerop2 {
+		background: #f49e24;
+	}
+	.zeroNone {
+		background: yellow;
+	}
+</style>
+</head>
+<body>
+
+<h3>getting numbers</h3>
+
+<label>Player 1</label>
+<input type="number" id="pOneBet" placeholder="enter bet here">
+<label>Player 2</label>
+<input type="number" id="pTwoBet" placeholder="enter bet here">
+
+<p>Click the button to enter bets</p>
+
+<button type="submit" value="submit" onclick="adjustScore();">Try it</button>
+
+
+<p id="demo1"></p>
+<p id="demo2"></p>
+<p id="demo3"></p>
+<p id="demo4"></p>
+<p id="demo5"></p>
+<p id="demo6"></p>
+<p id="winner"></p>
+<section>
+  <div id="p1three", style="border: 2px solid red; display: inline-block; width: 14%; height: 350px; float:left;">
+    <p>testing</p>
+  </div>
+  <div id="p1two", style="border: 2px solid red; display: inline-block; width: 14%; height: 350px; float:left;">
+  </div>
+  <div id="p1one", style="border: 2px solid red; display: inline-block; width: 14%; height: 350px; float:left;">
+  </div>
+  <div id="zero" class="zeroBoth", style="border: 2px solid black; display: inline-block; width: 10%; height: 350px; float:left">
+  	<ul style="list-style-type: none; width: 50%; margin: auto 0;">
+	    <li style="border: 2px solid purple;">
+	    	<p>p1</p>
+	    </li>
+	    <li style="border: 2px solid purple;">
+	    	<p>p2</p>
+	    </li>
+    </ul>
+  </div>
+  <div id="p2one", style="border: 2px solid blue; display: inline-block; width: 14%; height: 350px; float:left;">
+  </div>
+  <div id="p2two", style="border: 2px solid blue; display: inline-block; width: 14%; height: 350px; float:left">
+  </div>
+  <div id="p2three", style="border: 2px solid blue; display: inline-block; width: 14%; height: 350px; float:left;">
+  </div>
+<div style="clear: both;"></div>
+</section>
+
+
+<script>
+var score1 = 20;
+var score2 = 20;
+var x;
+var y;
+var p1CurrentPosition = 0;
+var p2CurrentPosition = 0;
+
+function bets() {
+    x = document.getElementById("pOneBet").value;
+    document.getElementById("demo1").innerHTML = "bet one is " + x;
+    y = document.getElementById("pTwoBet").value;
+    document.getElementById("demo2").innerHTML = "bet two is " + y;
+    var z = [x,y];
+    document.getElementById("demo3").innerHTML = "bets are " + z;
+    return z;
+}
+
+function p1Position(a) {
+	if (a === 1) {
+		document.getElementById("p1one").className = "on";
+		document.getElementById("p1two").className = "";
+		document.getElementById("p1three").className = "";
+	}
+	else if (a === 2) {
+		document.getElementById("p1one").className = "";
+		document.getElementById("p1two").className = "on";
+		document.getElementById("p1three").className = "";
+	}
+	else if (a === 3) {
+		document.getElementById("p1one").className = "";
+		document.getElementById("p1two").className = "";
+		document.getElementById("p1three").className = "on";
+	}
+	else {
+		document.getElementById("p1one").className = "";
+		document.getElementById("p1two").className = "";
+		document.getElementById("p1three").className = "";
+	}
+}
+
+function p2Position(b) {
+	if (b === 1) {
+		document.getElementById("p2one").className = "on";
+		document.getElementById("p2two").className = "";
+		document.getElementById("p2three").className = "";
+	}
+	else if (b === 2) {
+		document.getElementById("p2one").className = "";
+		document.getElementById("p2two").className = "on";
+		document.getElementById("p2three").className = "";
+	}
+	else if (b === 3) {
+		document.getElementById("p2one").className = "";
+		document.getElementById("p2two").className = "";
+		document.getElementById("p2three").className = "on";
+	}
+	else {
+		document.getElementById("p2one").className = "";
+		document.getElementById("p2two").className = "";
+		document.getElementById("p2three").className = "";
+	}
+}
+function zeroZone(c,d) {
+	if (c === 0 && d != 0) {
+		document.getElementById("zero").className = "zerop1";
+	}
+	else if (c !== 0 && d === 0) {
+		document.getElementById("zero").className = "zerop2";
+	}
+	else if (c === 0 && d === 0) {
+		document.getElementById("zero").className = "zeroBoth";
+	}
+	else {
+		document.getElementById("zero").className = "zeroNone";
+	}
+}
+
+function adjustScore() {
+	var p = bets();
+  if (p[0] > p[1]) {
+    document.getElementById("winner").innerHTML = "player 1 wins this round";
+    p1CurrentPosition += 1;
+
+  }
+  else if (p[1] > p[0]) {
+    document.getElementById("winner").innerHTML = "player 2 wins this round";
+    p2CurrentPosition += 1;
+
+  }
+  else {
+    document.getElementById("winner").innerHTML = "no winner this round, bet again";
+  }
+  score1 -= p[0];
+	score2 -= p[1];
+	p1Position(p1CurrentPosition);
+	p2Position(p2CurrentPosition);
+    zeroZone(p1CurrentPosition, p2CurrentPosition);
+
+	document.getElementById("demo6").innerHTML = p;
+	console.log(p);
+	console.log(p[0]);
+	console.log(p[1]);
+	document.getElementById("demo4").innerHTML = "player 1 now has " + score1 + " points";
+	document.getElementById("demo5").innerHTML = "player 2 now has " + score2 + " points";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
