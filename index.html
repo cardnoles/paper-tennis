@@ -1,193 +1,391 @@
 <!DOCTYPE html>
 <html>
-<head>
-<style type="text/css">
-	.on {
-		background: pink;
-	}
-	.zeroBoth {
-		background: gray;
-	}
-	.zerop1 {
-		background: #a4c8f4;
-	}
-	.zerop2 {
-		background: #f49e24;
-	}
-	.zeroNone {
-		background: yellow;
-	}
-</style>
-</head>
-<body>
+	<head>
+		<!-- Styling for Game Board -->
+		<style type="text/css">
+			.circle::before {
+				content: ' \25CF';
+				font-size: 500%;
+				text-align: center;
+				color: green;
+				display: inline-block;
+				width: 100%;
+				height: 25%;
+			}
+			.on {
+				background: pink;
+			}
+			.zeroBoth {
+				background: gray;
+			}
+			.p1Winner {
+				background: black;
+				color: white;
+				margin: 10%;
+				text-align: center;
+			}
+			.p2Winner {
+				background: black;
+				color: white;
+				margin: 10%;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<h3>Paper Tennis</h3>
 
-<h3>getting numbers</h3>
+		<!-- Input for player names -->
+		<label>Player 1 Name</label>
+			<input type="text" id="pOneName" placeholder="Player 1 Name">
+		<label>Player 2 Name</label>
+			<input type="text" id="pTwoName" placeholder="Player 2 Name">
+		<br>
+		<br>
+		<button type="submit" value="submit" onclick="captureNames();">submit names</button>
+		<br>
+		<br>
+		<br>
 
-<label>Player 1</label>
-<input type="number" id="pOneBet" placeholder="enter bet here">
-<label>Player 2</label>
-<input type="number" id="pTwoBet" placeholder="enter bet here">
-
-<p>Click the button to enter bets</p>
-
-<button type="submit" value="submit" onclick="adjustScore();">Try it</button>
-
-
-<p id="demo1"></p>
-<p id="demo2"></p>
-<p id="demo3"></p>
-<p id="demo4"></p>
-<p id="demo5"></p>
-<p id="demo6"></p>
-<p id="winner"></p>
-<section>
-  <div id="p1three", style="border: 2px solid red; display: inline-block; width: 14%; height: 350px; float:left;">
-    <p>testing</p>
-  </div>
-  <div id="p1two", style="border: 2px solid red; display: inline-block; width: 14%; height: 350px; float:left;">
-  </div>
-  <div id="p1one", style="border: 2px solid red; display: inline-block; width: 14%; height: 350px; float:left;">
-  </div>
-  <div id="zero" class="zeroBoth", style="border: 2px solid black; display: inline-block; width: 10%; height: 350px; float:left">
-  	<ul style="list-style-type: none; width: 50%; margin: auto 0;">
-	    <li style="border: 2px solid purple;">
-	    	<p>p1</p>
-	    </li>
-	    <li style="border: 2px solid purple;">
-	    	<p>p2</p>
-	    </li>
-    </ul>
-  </div>
-  <div id="p2one", style="border: 2px solid blue; display: inline-block; width: 14%; height: 350px; float:left;">
-  </div>
-  <div id="p2two", style="border: 2px solid blue; display: inline-block; width: 14%; height: 350px; float:left">
-  </div>
-  <div id="p2three", style="border: 2px solid blue; display: inline-block; width: 14%; height: 350px; float:left;">
-  </div>
-<div style="clear: both;"></div>
-</section>
+		<!-- Displays player names -->
 
 
-<script>
-var score1 = 20;
-var score2 = 20;
-var x;
-var y;
-var p1CurrentPosition = 0;
-var p2CurrentPosition = 0;
+		<!-- Input for bets -->
+		<label id="player1Name"></label>
+			<input type="password" id="pOneBet" placeholder="enter bet here">
+		<label id="player2Name"></label>
+			<input type="password" id="pTwoBet" placeholder="enter bet here">
 
-function bets() {
-    x = document.getElementById("pOneBet").value;
-    document.getElementById("demo1").innerHTML = "bet one is " + x;
-    y = document.getElementById("pTwoBet").value;
-    document.getElementById("demo2").innerHTML = "bet two is " + y;
-    var z = [x,y];
-    document.getElementById("demo3").innerHTML = "bets are " + z;
-    return z;
-}
+		<!-- Button to accept the bets and run the playGame function -->
+		<p>Click the button to enter bets</p>
+		<button type="submit" value="submit" onclick="playGame();">Click Here</button>
+		<br>
 
-function p1Position(a) {
-	if (a === 1) {
-		document.getElementById("p1one").className = "on";
-		document.getElementById("p1two").className = "";
-		document.getElementById("p1three").className = "";
-	}
-	else if (a === 2) {
-		document.getElementById("p1one").className = "";
-		document.getElementById("p1two").className = "on";
-		document.getElementById("p1three").className = "";
-	}
-	else if (a === 3) {
-		document.getElementById("p1one").className = "";
-		document.getElementById("p1two").className = "";
-		document.getElementById("p1three").className = "on";
-	}
-	else {
-		document.getElementById("p1one").className = "";
-		document.getElementById("p1two").className = "";
-		document.getElementById("p1three").className = "";
-	}
-}
+		<!-- messages, primarily for testing, probably don't need all of these -->
+		<p id="demo1" style="display: inline-block; color: red;"></p> <p id="demo2" style="display: inline-block; color: blue;"></p>
+		<p id="invalidInput"></p>
+		<p id="demo4"></p>
+		<p id="demo5"></p>
+		<p id="demo6"></p>
+		<p id="roundWinner"></p>
+		<p id="gameWinner"></p>
+		<p id="gameOver"></p>
+		<p id="p1GameWins"></p>
+		<p id="p2GameWins"></p>
+		<h3 id="matchWins"></h3>
 
-function p2Position(b) {
-	if (b === 1) {
-		document.getElementById("p2one").className = "on";
-		document.getElementById("p2two").className = "";
-		document.getElementById("p2three").className = "";
-	}
-	else if (b === 2) {
-		document.getElementById("p2one").className = "";
-		document.getElementById("p2two").className = "on";
-		document.getElementById("p2three").className = "";
-	}
-	else if (b === 3) {
-		document.getElementById("p2one").className = "";
-		document.getElementById("p2two").className = "";
-		document.getElementById("p2three").className = "on";
-	}
-	else {
-		document.getElementById("p2one").className = "";
-		document.getElementById("p2two").className = "";
-		document.getElementById("p2three").className = "";
-	}
-}
-function zeroZone(c,d) {
-	if (c === 0 && d != 0) {
-		document.getElementById("zero").className = "zerop1";
-	}
-	else if (c !== 0 && d === 0) {
-		document.getElementById("zero").className = "zerop2";
-	}
-	else if (c === 0 && d === 0) {
-		document.getElementById("zero").className = "zeroBoth";
-	}
-	else {
-		document.getElementById("zero").className = "zeroNone";
-	}
-}
+		<!-- button to reset the board -->
+		<button type="submit" value="submit" onclick="clearBoardSamePlayers();">Click Here to Clear Board and Play Again</button>
+		<br>
+		<button type="submit" value="submit" onclick="clearBoardEndOfMatch();">Click Here at the End of the Match</button>
+		<!-- Board Titles (player names eventually) -->
+		<div>
+			<h3 id="p1Field" style="float: left; width: 49%; text-align: center;">Player One's Field</h3>
+			<h3 id="p2Field" style="float: left; width: 49%; text-align: center;">Player Two's Field</h3>
+			<div style="clear: both;"></div>
+		</div>
 
-function adjustScore() {
-	var p = bets();
-  if (p[0] > p[1]) {
-    document.getElementById("winner").innerHTML = "player 1 wins this round";
-    p1CurrentPosition += 1;
+		<!-- Board with lots of inline styling! -->
+		<section>
+		    <div id="p1three", style="border-top: 2px solid red; border-left: 2px solid red; border-bottom: 2px solid red; display: inline-block; width: 14%; height: 350px; float:left;">
+		    	<p id="p2Wins"></p>
+		    </div>
+		    <div id="p1two", style="border-top: 2px solid red; border-left: 2px dotted red; border-bottom: 2px solid red; display: inline-block; width: 14%; height: 350px; float:left;">
+		      <p id="p22Wins" class="p2Winner"></p>
+		    </div>
+		    <div id="p1one", style="border-top: 2px solid red; border-left: 2px dotted red; border-bottom: 2px solid red; display: inline-block; width: 14%; height: 350px; float:left;">
+		      <p id="p21Wins" class="p2Winner"></p>
+		    </div>
+		    <div id="zero", class="zeroBoth circle", style="border: 2px solid black; display: inline-block; width: 10%; height: 350px; float:left">
+		    </div>
+		    <div id="p2one", style="border-top: 2px solid blue; border-bottom: 2px solid blue; border-right: 2px dotted blue; display: inline-block; width: 14%; height: 350px; float:left;">
+		      <p id="p11Wins" class="p1Winner"></p>
+		    </div>
+		    <div id="p2two", style="border-top: 2px solid blue; border-bottom: 2px solid blue; border-right: 2px dotted blue; display: inline-block; width: 14%; height: 350px; float:left">
+		      <p id="p12Wins" class="p1Winner"></p>
+		    </div>
+		    <div id="p2three", style="border-top: 2px solid blue; border-bottom: 2px solid blue; border-right: 2px solid blue; display: inline-block; width: 14%; height: 350px; float:left;">
+		    	<p id="p1Wins" class="p1Winner"></p>
+		    </div>
+		    <div style="clear: both;"></div>
+		</section>
 
-  }
-  else if (p[1] > p[0]) {
-    document.getElementById("winner").innerHTML = "player 2 wins this round";
-    p2CurrentPosition += 1;
+		<!-- JavaScript -->
+		<script>
+			// Global variables
+			var score1 = 20;
+			var score2 = 20;
+			var x;
+			var y;
+			var p1CurrentPosition = 0;
+			var p2CurrentPosition = 0;
+			var winner = false;
+			var p1TotalWins = 0;
+			var p2TotalWins = 0;
 
-  }
-  else {
-    document.getElementById("winner").innerHTML = "no winner this round, bet again";
-  }
-  score1 -= p[0];
-	score2 -= p[1];
-	p1Position(p1CurrentPosition);
-	p2Position(p2CurrentPosition);
-    zeroZone(p1CurrentPosition, p2CurrentPosition);
+			// gets and validates the bet inputs, returns a 2 value array representing betOne and betTwo
+			function bets() {
+				document.getElementById("invalidInput").innerHTML = "";
+			      x = parseInt(document.getElementById("pOneBet").value);
+			    document.getElementById("demo1").innerHTML = "bet one is " + x;
+			      y = parseInt(document.getElementById("pTwoBet").value);
+			    document.getElementById("demo2").innerHTML = "bet two is " + y;
+			    if ((x >= 0 && x <= score1) && (y >=0 && y <= score2)) {
+			      var z = [x,y];
+			    }
+			    else if (score1 === 0 && x != 0){
+			    	document.getElementById("invalidInput").innerHTML = "Player 1 - bet must be 0";
+			    }
+			    else if (score2 === 0 && y != 0){
+			    	document.getElementById("invalidInput").innerHTML = "Player 2 - bet must be 0";
+			    }
+			    else if (x < 0){
+			      document.getElementById("invalidInput").innerHTML = "Player 1 - bet cannot be a negative number";
+			    }
+			    else if (x > score1){
+			      document.getElementById("invalidInput").innerHTML = "Player 1 - you do not have that many points left";
+			    }
+			    else if (y < 0){
+			      document.getElementById("invalidInput").innerHTML = "Player 2 - bet cannot be a negative number";
+			    }
+			    else if (y > score2){
+			      document.getElementById("invalidInput").innerHTML = "Player 2 - you do not have that many points left";
+			    }
+			    else {
+			      document.getElementById("invalidInput").innerHTML = "invalid Input - try again";
+			    }
+			    return z;
+			}
 
-	document.getElementById("demo6").innerHTML = p;
-	console.log(p);
-	console.log(p[0]);
-	console.log(p[1]);
-	document.getElementById("demo4").innerHTML = "player 1 now has " + score1 + " points";
-	document.getElementById("demo5").innerHTML = "player 2 now has " + score2 + " points";
-}
+			/* function to move the ball and highlight section of board for Player 1
+			 results show on Player 2's side of the board - per rules of the game */
+			function p1Position(a) {
+				var n = captureNames();
+				if (a === 11) {
+					document.getElementById("p2one").className = "on circle";
+					document.getElementById("p2two").className = "";
+					document.getElementById("p2three").className = "";
+			        document.getElementById("zero").className = "zeroBoth";
+				}
+				else if (a === 22) {
+					document.getElementById("p2one").className = "";
+					document.getElementById("p2two").className = "on circle";
+					document.getElementById("p2three").className = "";
+			        document.getElementById("zero").className = "zeroBoth";
+				}
+				else if (a === 33) {
+					document.getElementById("p2one").className = "";
+					document.getElementById("p2two").className = "";
+					document.getElementById("p2three").className = "on circle";
+			        document.getElementById("zero").className = "zeroBoth";
+			        document.getElementById("p1Wins").innerHTML = n[0] + " Wins!";
+			        document.getElementById("p1Wins").className = "p1Winner";
+				}
+				else {
+					document.getElementById("p2one").className = "";
+					document.getElementById("p2two").className = "";
+					document.getElementById("p2three").className = "";
+			        document.getElementById("zero").className = "zeroBoth";
+				}
+			}
 
+			/* function to move the ball and highlight section of board for Player 2
+			 results show on Player 1's side of the board - per rules of the game */
+			function p2Position(b) {
+				var n = captureNames();
+				if (b === 1) {
+					document.getElementById("p1one").className = "on circle";
+					document.getElementById("p1two").className = "";
+					document.getElementById("p1three").className = "";
+			        document.getElementById("zero").className = "zeroBoth";
+				}
+				else if (b === 2) {
+					document.getElementById("p1one").className = "";
+					document.getElementById("p1two").className = "on circle";
+					document.getElementById("p1three").className = "";
+			        document.getElementById("zero").className = "zeroBoth";
+				}
+				else if (b === 3) {
+					document.getElementById("p1one").className = "";
+					document.getElementById("p1two").className = "";
+					document.getElementById("p1three").className = "on circle";
+			        document.getElementById("zero").className = "zeroBoth";
+			        document.getElementById("p2Wins").innerHTML =  n[1] + " Wins!"
+			        document.getElementById("p2Wins").className = "p2Winner"
+				}
+				else {
+					document.getElementById("p1one").className = "";
+					document.getElementById("p1two").className = "";
+					document.getElementById("p1three").className = "";
+			        document.getElementById("zero").className = "zeroBoth";
+				}
+			}
 
+			// plays the game
+			// step one - determines if there is a winner, returns no more bets message if there is a winner
+			// step two - adjusts position tally based on who has higher bets
+			// step three - adusts the score (number of points available)
+			// step four - displays new score (points available)
+			// step five - runs functions that make changes on the board
+			// step six - runs function that checks to see if there is a winner
+			function playGame() {
+			  var n = captureNames();
+			  console.log(n);
+			  if (winner) {
+					document.getElementById("gameOver").innerHTML = "no more bets - game is over";
+			  }
+			  else {
+					var p = bets();
+				  if (p[0] > p[1]) {
+				    document.getElementById("roundWinner").innerHTML =  n[0] + " wins this round";
+				    p1CurrentPosition += 11;
+				    p2CurrentPosition = 0;
+				  }
+				  else if (p[1] > p[0]) {
+				    document.getElementById("roundWinner").innerHTML = n[1] + " wins this round";
+				    p2CurrentPosition += 1;
+				    p1CurrentPosition = 0;
+				  }
+				  else {
+				    document.getElementById("roundWinner").innerHTML = "no winner this round, bet again";
+				  }
+				  score1 -= p[0];
+				  score2 -= p[1];
+				  document.getElementById("demo4").innerHTML = n[0] + " now has " + score1 + " points";
+				  document.getElementById("demo5").innerHTML = n[1] + " now has " + score2 + " points";
+				  p1Position(p1CurrentPosition);
+				  p2Position(p2CurrentPosition);
+				  checkForWinner(p1CurrentPosition,p2CurrentPosition,score1,score2);
+			  }
+			}
 
+			//function that checks to see if there is a winner and displays appropiate message
+			function checkForWinner(r,s,t,w) {
+				var n = captureNames();
+			    if (r === 33 || ((t === 0 && w === 0) && r > 10) || (t > 0 && w === 0)) {
+			      document.getElementById("gameWinner").innerHTML = n[0] + " has won the game!!";
+			      winner = true;
+			      if ( r === 11 ){
+			      	document.getElementById("p11Wins").innerHTML = n[0] + " Wins!";
+			        document.getElementById("p11Wins").className = "p1Winner";
+			      }
+			      else if ( r === 22 ){
+			      	document.getElementById("p12Wins").innerHTML = n[0] + " Wins!";
+			        document.getElementById("p12Wins").className = "p1Winner";
+			      }
+				clearMessages();
+				p1TotalWins += 1;
+				document.getElementById("p1GameWins").innerHTML = n[0] + " has won " + p1TotalWins + " games";
+				  if (p1TotalWins === 3){
+					document.getElementById("matchWins").innerHTML = n[0] + " wins the match!!";
+					learBoardEndOfMatch();
+				  }
+			    }
+			    else if (s === 3 || ((t === 0 && w === 0) && s > 0) || (w > 0 && t === 0)) {
+			      document.getElementById("gameWinner").innerHTML = n[1] + " has won the game!!";
+			      winner = true;
+			      if ( s === 1 ){
+			      	document.getElementById("p21Wins").innerHTML = n[1] + " Wins!";
+			        document.getElementById("p21Wins").className = "p2Winner";
+			      }
+			      else if ( s === 2 ){
+			      	console.log(s);
+			      	document.getElementById("p22Wins").innerHTML = n[1] + " Wins!";
+			        document.getElementById("p22Wins").className = "p2Winner";
+			      }
+				  clearMessages();
+				  p2TotalWins += 1;
+				  document.getElementById("p2GameWins").innerHTML = n[1] + " has won " + p2TotalWins + " games";
+				  if (p2TotalWins === 3){
+				  	document.getElementById("matchWins").innerHTML = n[1] + " wins the match!!";
+				  	clearBoardEndOfMatch();
+				  }
+			    }
+			    else {
+			      document.getElementById("gameWinner").innerHTML = "no winner yet - keep playing";
+			    }
+			}
 
+			// function that clears the board
+			function clearBoardSamePlayers() {
+			    score1 = 20;
+			    score2 = 20;
+			    p1CurrentPosition = 0;
+			    p2CurrentPosition = 0;
+			    document.getElementById("pOneBet").value = "";
+			    document.getElementById("pTwoBet").value = "";
+			    document.getElementById("p2one").className = "";
+			    document.getElementById("p2two").className = "";
+			    document.getElementById("p2three").className = "";
+			    document.getElementById("zero").className = "zeroBoth circle";
+			    document.getElementById("p1one").className = "";
+			    document.getElementById("p1two").className = "";
+			    document.getElementById("p1three").className = "";
+			    document.getElementById("p1Wins").innerHTML = "";
+			    document.getElementById("p1Wins").className = "";
+			    document.getElementById("p2Wins").innerHTML = "";
+			    document.getElementById("p2Wins").className = "";
+			    document.getElementById("gameWinner").innerHTML = "";
+			    document.getElementById("p11Wins").innerHTML = "";
+			    document.getElementById("p12Wins").innerHTML = "";
+			    winner = false;
+			    x = "";
+			    y = "";
+			}
 
+			function clearBoardEndOfMatch() {
+			    score1 = 20;
+			    score2 = 20;
+			    p1CurrentPosition = 0;
+			    p2CurrentPosition = 0;
+			    document.getElementById("pOneName").value = "";
+			    document.getElementById("pTwoName").value = "";
+			    document.getElementById("pOneBet").value = "";
+			    document.getElementById("pTwoBet").value = "";
+			    document.getElementById("p2one").className = "";
+			    document.getElementById("p2two").className = "";
+			    document.getElementById("p2three").className = "";
+			    document.getElementById("zero").className = "zeroBoth circle";
+			    document.getElementById("p1one").className = "";
+			    document.getElementById("p1two").className = "";
+			    document.getElementById("p1three").className = "";
+			    document.getElementById("p1Wins").innerHTML = "";
+			    document.getElementById("p1Wins").className = "";
+			    document.getElementById("p2Wins").innerHTML = "";
+			    document.getElementById("p2Wins").className = "";
+			    document.getElementById("gameWinner").innerHTML = "";
+			    document.getElementById("p11Wins").innerHTML = "";
+			    document.getElementById("p12Wins").innerHTML = "";
+			    p1TotalWins = 0;
+			    p2TotalWins = 0;
+			    winner = false;
+			    x = "";
+			    y = "";
+			}
 
+			// function that clears the testing messages
+			function clearMessages() {
+				console.log("clear messages function has engaged");
+				document.getElementById("demo1").innerHTML = "";
+				document.getElementById("demo2").innerHTML = "";
+				document.getElementById("invalidInput").innerHTML = "";
+				document.getElementById("demo4").innerHTML = "";
+				document.getElementById("demo5").innerHTML = "";
+				document.getElementById("demo6").innerHTML = "";
+				document.getElementById("roundWinner").innerHTML = "";
+			}
 
-
-
-
-
-
-
-</script>
-
-</body>
+			// function that processes name input
+			function captureNames(){
+				var nameOne = document.getElementById("pOneName").value;
+				var nameTwo = document.getElementById("pTwoName").value;
+				var players = [nameOne, nameTwo];
+				document.getElementById("p1Field").innerHTML = players[0] + "\'s field";
+				document.getElementById("p2Field").innerHTML = players[1] + "\'s field";
+				document.getElementById("player1Name").innerHTML = players[0] + "\'s bet";
+				document.getElementById("player2Name").innerHTML = players[1] + "\'s bet";
+				return players;
+			}
+		</script>
+	</body>
 </html>
